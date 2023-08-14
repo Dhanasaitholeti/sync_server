@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import bodyParser from "body-parser";
 import userRoutes from "./router/userRoutes";
+import testRoutes from "./router/testroute";
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,8 @@ app.get("/", (req: express.Request, res: express.Response) => {
 });
 
 app.use("/user", userRoutes);
+
+app.use("/test", testRoutes);
 
 const httpServer = createServer(app);
 const io = new Server(httpServer);
