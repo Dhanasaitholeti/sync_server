@@ -1,16 +1,27 @@
+import bcrypt from "bcryptjs";
+import { tokenGenerator } from "../helpers/tokenGenerator";
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { getUserDataWithEmail } from "../helpers/index";
 const prisma = new PrismaClient();
 
 async function createuser(req: Request, res: Response) {
-  console.log(req.body);
-  const { name, Email } = req.body;
-  console.log(name, Email);
+  const { Name, Email, Password } = req.body;
   try {
+    const existeduser = await prisma.user.findFirst({
+      where: {
+        Email,
+      },
+    });
+    if (existeduser)
+      return res.status(401).json({
+        message: "Email is already in use, Try with a different email",
+      });
     const user = await prisma.user.create({
       data: {
-        name,
+        Name,
         Email,
+        Password,
       },
     });
     console.log("A new User is Creates successfully");
@@ -57,4 +68,56 @@ async function deleteUser(req: Request, res: Response) {
   }
 }
 
-export { createuser, getUsers, deleteUser };
+async function Signup(req: Request, res: Response) {
+  const { Email, Name, Password } = req.body;
+  try {
+    const EmailUsersData = await getUserDataWithEmail(Email);
+    if (EmailUsersData)
+      return res.send(400).json({
+        message: "Email is already in use, Try with a different email",
+      });
+
+    const salt = await bcrypt.genSalt(10);
+    const PasswordHash = await bcrypt.hash(Password, salt);
+
+    const NewUser = await prisma.user.create({
+      data: {
+        Name,
+        Email,
+        Password: PasswordHash,
+      },
+    });
+    res.status(201).json({ message: "Created New User", Data: NewUser });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: "unable to create new Account" });
+  }
+}
+
+async function Login(req: Request, res: Response) {
+  const { Email, Password } = req.body;
+  try {
+    const EmailUsersData = await getUserDataWithEmail(Email);
+    if (!EmailUsersData)
+      return res.status(403).json({ message: "Invalid Credentials" });
+
+    const passwdRes = await bcrypt.compare(Password, EmailUsersData.Password);
+
+    if (!passwdRes)
+      return res
+        .status(403)
+        .json({ message: "Password provided is incorrect" });
+
+    const token = await tokenGenerator({
+      UserId: EmailUsersData.id,
+      Email: EmailUsersData.Email,
+    });
+
+    res.status(200).json({ token });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: "unable to login" });
+  }
+}
+
+export { createuser, getUsers, deleteUser, Login, Signup };

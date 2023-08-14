@@ -11,20 +11,25 @@ datasource db {
 }
 
 model User {
-  id   String    @id @default(uuid())
+  id String @id@default(uuid())
   Name String
-  Email String   @unique
+  Email String @unique
   Password String
-
+  chats Chat[]
+  messages Message[]
 }
 
 model Chat {
-  id String @id @default(uuid())
-  user1Id User
+  id String @id@default(uuid())
+  members User[]
+  messages Message[]
 }
 
-
-model message {
-  id String @id @default(uuid())
-
+model Message {
+  id String @id@default(uuid())
+  content String
+  timestamp DateTime
+  sender User @relation(fields: [senderId],references: [id])
+  senderId String
+  chats Chat[]
 }
