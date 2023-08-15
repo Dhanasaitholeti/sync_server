@@ -7,6 +7,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import userRoutes from "./router/userRoutes";
 import testRoutes from "./router/testroute";
+import { addConnectionStatus, removeConnectionStatus } from "./helpers/socket";
 
 const app = express();
 app.use(cors());
@@ -17,16 +18,17 @@ app.get("/", (req: express.Request, res: express.Response) => {
 });
 
 app.use("/user", userRoutes);
-
-app.use("/test", testRoutes);
+app.use("/test", testRoutes); ////// This is for Testing new features and incrementally implement in the app.
 
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
-io.on("connection", (socket) => {
-  console.log("A clien connected to the websocket");
-  socket.on("message", (message) => {
-    socket.broadcast.emit("message", message);
+io.on("connection", async (socket) => {
+  await addConnectionStatus("This is userid bech", socket.id);
+  console.log("A client connected to the websocket");
+
+  socket.on("disconnect", async () => {
+    await removeConnectionStatus(socket.id);
   });
 });
 
