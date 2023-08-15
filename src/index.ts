@@ -7,7 +7,11 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import userRoutes from "./router/userRoutes";
 import testRoutes from "./router/testroute";
-import { addConnectionStatus, removeConnectionStatus } from "./helpers/socket";
+import {
+  addConnectionStatus,
+  removeConnectionStatus,
+  sendDatatoConncetion,
+} from "./helpers/socket";
 
 const app = express();
 app.use(cors());
@@ -24,10 +28,17 @@ const httpServer = createServer(app);
 const io = new Server(httpServer);
 
 io.on("connection", async (socket) => {
-  await addConnectionStatus("This is userid bech", socket.id);
-  console.log("A client connected to the websocket");
+  socket.on("set", async (Data) => {
+    await addConnectionStatus(Data, socket.id);
+    console.log("A client connected to the websocket");
+  });
+
+  socket.on("sendMessage", (Data) => {
+    sendDatatoConncetion(io, "hello");
+  });
 
   socket.on("disconnect", async () => {
+    console.log("Client disconnected");
     await removeConnectionStatus(socket.id);
   });
 });

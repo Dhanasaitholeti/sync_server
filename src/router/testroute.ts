@@ -4,7 +4,7 @@ import {
   getchats,
   deletechat,
   connections,
-} from "../controller/test";
+} from "../controllers/test";
 import express from "express";
 const router = express.Router();
 
