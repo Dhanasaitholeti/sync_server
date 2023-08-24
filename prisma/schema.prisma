@@ -10,34 +10,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                String              @id @default(uuid())
-  Name              String
-  Email             String              @unique
-  Password          String
-  chats             Chat[]
-  messages          Message[]
-
+model user {
+  id           String    @id @default(uuid())
+  Name         String
+  Email        String    @unique
+  PasswordHash String
+  chats        chat[]
+  messages     message[]
 }
 
-model Chat {
+model chat {
   id       String    @id @default(uuid())
-  members  User[]
-  messages Message[]
+  members  user[]
+  messages message[]
 }
 
-model Message {
-  id        String   @id @default(uuid())
-  content   String
-  timestamp DateTime
-  sender    User     @relation(fields: [senderId], references: [id])
-  senderId  String
-  chats     Chat     @relation(fields: [chatId], references: [id])
-  chatId    String
+model message {
+  id       String @id @default(uuid())
+  content  String
+  sender   user   @relation(fields: [senderId], references: [id])
+  senderId String
+  chatlist chat   @relation(fields: [chatId], references: [id])
+  chatId   String
 }
 
-model activeconnections {
+model activeconnection {
   id           String @id @default(uuid())
-  connectionid String
+  connectionId String
   userId       String
 }
