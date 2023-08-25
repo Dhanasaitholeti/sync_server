@@ -6,7 +6,7 @@ import { getUserDataWithEmail } from "../helpers/index";
 const prisma = new PrismaClient();
 
 async function createuser(req: Request, res: Response) {
-  const { Name, Email, Password } = req.body;
+  const { Name, Email, PasswordHash } = req.body;
   try {
     const existeduser = await prisma.user.findFirst({
       where: {
@@ -21,7 +21,7 @@ async function createuser(req: Request, res: Response) {
       data: {
         Name,
         Email,
-        Password,
+        PasswordHash,
       },
     });
     console.log("A new User is Creates successfully");
@@ -84,7 +84,7 @@ async function Signup(req: Request, res: Response) {
       data: {
         Name,
         Email,
-        Password: PasswordHash,
+        PasswordHash,
       },
     });
     res.status(201).json({ message: "Created New User", Data: NewUser });
@@ -101,7 +101,10 @@ async function Login(req: Request, res: Response) {
     if (!EmailUsersData)
       return res.status(403).json({ message: "Invalid Credentials" });
 
-    const passwdRes = await bcrypt.compare(Password, EmailUsersData.Password);
+    const passwdRes = await bcrypt.compare(
+      Password,
+      EmailUsersData.PasswordHash
+    );
 
     if (!passwdRes)
       return res

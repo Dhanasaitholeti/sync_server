@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export async function connections(req: Request, res: Response) {
   try {
-    const connectionData = await prisma.activeconnections.findMany({});
+    const connectionData = await prisma.activeconnection.findMany({});
     res.status(200).json({ Data: connectionData });
   } catch (error) {
     console.log(error);

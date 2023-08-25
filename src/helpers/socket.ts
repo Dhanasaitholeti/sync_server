@@ -6,31 +6,31 @@ export async function addConnectionStatus(
   userId: string,
   connectionId: string
 ) {
-  await prisma.activeconnections.create({
+  await prisma.activeconnection.create({
     data: {
       userId,
-      connectionid: connectionId,
+      connectionId: connectionId,
     },
   });
 }
 
 export async function removeConnectionStatus(connectionId: string) {
-  await prisma.activeconnections.deleteMany({
+  await prisma.activeconnection.deleteMany({
     where: {
-      connectionid: connectionId,
+      connectionId: connectionId,
     },
   });
 }
 
 export async function sendDatatoConncetion(io: any, connectionId: string) {
-  const connectionidData = await prisma.activeconnections.findFirst({
+  const connectionidData = await prisma.activeconnection.findFirst({
     where: {
       userId: "client1",
     },
     select: {
-      connectionid: true,
+      connectionId: true,
     },
   });
   console.log(connectionidData);
-  io.to(connectionidData.connectionid).emit("message", `Message for you`);
+  io.to(connectionidData.connectionId).emit("message", `Message for you`);
 }
