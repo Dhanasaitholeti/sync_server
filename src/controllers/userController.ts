@@ -5,65 +5,23 @@ import { PrismaClient } from "@prisma/client";
 import { getUserDataWithEmail } from "../helpers/index";
 const prisma = new PrismaClient();
 
-async function createuser(req: Request, res: Response) {
-  const { Name, Email, PasswordHash } = req.body;
-  try {
-    const existeduser = await prisma.user.findFirst({
-      where: {
-        Email,
-      },
-    });
-    if (existeduser)
-      return res.status(401).json({
-        message: "Email is already in use, Try with a different email",
-      });
-    const user = await prisma.user.create({
-      data: {
-        Name,
-        Email,
-        PasswordHash,
-      },
-    });
-    console.log("A new User is Creates successfully");
-    res.status(201).json({
-      message: "User created successfully",
-      Data: user,
-    });
-  } catch (error) {
-    res.status(400).json({
-      message: "Error creating user",
-    });
-    console.log(error);
-    console.log("Error happened");
-  }
-}
-
 async function getUsers(req: Request, res: Response) {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        Name: true,
+        Email: true,
+        chats: true,
+        messages: true,
+      },
+    });
     console.log(users);
     res.status(200).json({ Data: users });
   } catch (error) {
     res.status(400).json({
       message: "unable to get users",
     });
-    console.log(error);
-  }
-}
-
-async function deleteUser(req: Request, res: Response) {
-  const { id } = req.params;
-  console.log(id);
-  try {
-    const deleteduser = await prisma.user.delete({
-      where: {
-        id: id,
-      },
-    });
-    console.log("successfully deleted the user");
-    res.json({ message: "succesfully deleted the user", data: deleteduser });
-  } catch (error) {
-    res.status(400).json({ message: "unable to delete user" });
     console.log(error);
   }
 }
@@ -123,4 +81,4 @@ async function Login(req: Request, res: Response) {
   }
 }
 
-export { createuser, getUsers, deleteUser, Login, Signup };
+export { getUsers, Login, Signup };
