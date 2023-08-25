@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 const prisma = new PrismaClient();
 
 export async function addConnectionStatus(
@@ -22,7 +22,7 @@ export async function removeConnectionStatus(connectionId: string) {
   });
 }
 
-export async function sendDatatoConncetion(io: any, connectionId: string) {
+export async function sendDatatoConncetion(io: Server, connectionId: string) {
   const connectionidData = await prisma.activeconnection.findFirst({
     where: {
       userId: "client1",

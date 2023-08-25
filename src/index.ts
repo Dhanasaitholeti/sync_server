@@ -6,12 +6,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import bodyParser from "body-parser";
 import Mainrouter from "./router";
-import {
-  addConnectionStatus,
-  removeConnectionStatus,
-  sendDatatoConncetion,
-} from "./helpers/socket";
-import { socketAuth } from "./middlewares/AuthMiddleware";
+import SocketServer from "./socket";
 
 const app = express();
 app.use(cors());
@@ -25,19 +20,7 @@ const io = new Server(httpServer, {
   },
 });
 
-io.use(socketAuth).on("connection", async (socket) => {
-  console.log("A client connected to the websocket");
-  console.log(socket);
-
-  socket.on("sendMessage", (Data) => {
-    sendDatatoConncetion(io, "hello");
-  });
-
-  socket.on("disconnect", async () => {
-    console.log("Client disconnected");
-    await removeConnectionStatus(socket.id);
-  });
-});
+SocketServer(io);
 
 httpServer.listen(8080, () => {
   console.log("server is listening on http://localhost:8080 :)");
