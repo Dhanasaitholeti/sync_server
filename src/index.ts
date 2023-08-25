@@ -19,13 +19,15 @@ app.use(bodyParser.json());
 Mainrouter(app); //for handelling the routes across the server
 
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
 
 io.use(socketAuth).on("connection", async (socket) => {
-  socket.on("set", async (Data) => {
-    await addConnectionStatus(Data, socket.id);
-    console.log("A client connected to the websocket");
-  });
+  console.log("A client connected to the websocket");
+  console.log(socket);
 
   socket.on("sendMessage", (Data) => {
     sendDatatoConncetion(io, "hello");
