@@ -20,7 +20,7 @@ const io = new Server(httpServer, {
   },
 });
 
-SocketServer(io);
+SocketServer(io); //for handelling the socket events
 
 httpServer.listen(8080, () => {
   console.log("server is listening on http://localhost:8080 :)");

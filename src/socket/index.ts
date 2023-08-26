@@ -1,23 +1,14 @@
 import { Server } from "socket.io";
 import { socketAuth } from "../middlewares/AuthMiddleware";
-import {
-  addConnectionStatus,
-  removeConnectionStatus,
-  sendDatatoConncetion,
-} from "../helpers/socket";
+import { addConnectionStatus } from "../helpers/socket";
+import disconnect from "./events/disconnect";
 
 const setSocket = (io: Server) => {
   io.use(socketAuth).on("connection", async (socket) => {
-    console.log("A client connected to the websocket");
-    console.log(socket.id);
+    await addConnectionStatus(socket.userData.id.toString(), socket.id);
+    console.log("client connected");
 
-    socket.on("sendMessage", (Data) => {
-      sendDatatoConncetion(io, "hello");
-    });
-
-    socket.on("disconnect", async () => {
-      console.log("Client disconnected");
-    });
+    disconnect(socket);
   });
 };
 
