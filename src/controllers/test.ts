@@ -2,15 +2,15 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export async function connections(req: Request, res: Response) {
-  try {
-    const connectionData = await prisma.activeconnection.findMany({});
-    res.status(200).json({ Data: connectionData });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: "unable to get connections" });
-  }
-}
+// export async function connections(req: Request, res: Response) {
+//   try {
+//     const connectionData = await prisma.activeconnection.findMany({});
+//     res.status(200).json({ Data: connectionData });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json({ message: "unable to get connections" });
+//   }
+// }
 
 export async function createChat(req: Request, res: Response) {
   const { sender, UserId } = req.body;

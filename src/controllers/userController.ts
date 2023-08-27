@@ -14,6 +14,9 @@ async function getUsers(req: Request, res: Response) {
         Email: true,
         chats: true,
         messages: true,
+        // connectionId: true,
+        lastSeenAt: true,
+        status: true,
       },
     });
     console.log(users);

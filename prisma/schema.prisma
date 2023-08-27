@@ -10,11 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  Active
+  InActive
+}
+
 model user {
   id           String    @id @default(uuid())
   Name         String
   Email        String    @unique
   PasswordHash String
+  status       Status    @default(InActive)
+  connectionId String[]
+  lastSeenAt   DateTime  @default(now()) @updatedAt()
   chats        chat[]
   messages     message[]
 }
@@ -32,10 +40,4 @@ model message {
   senderId String
   chatlist chat   @relation(fields: [chatId], references: [id])
   chatId   String
-}
-
-model activeconnection {
-  id           String @id @default(uuid())
-  connectionId String
-  userId       String
 }
