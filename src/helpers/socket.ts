@@ -60,6 +60,13 @@ export async function sendDatatoConncetion(io: Server, Data: any) {
       connectionId: true,
     },
   });
-  console.log(connectionidData);
+  const newmsg = await prisma.message.create({
+    data: {
+      content: message,
+      senderId: userId,
+      chatId: "580f4212-760a-4c79-be5f-40dea46979b1",
+    },
+  });
+
   io.to(connectionidData.connectionId).emit("message", `Message for you`);
 }
