@@ -40,4 +40,5 @@ model message {
   senderId String
   chatlist chat   @relation(fields: [chatId], references: [id])
   chatId   String
+  sentTime DateTime @default(now())
 }
