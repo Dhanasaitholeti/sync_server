@@ -3,6 +3,7 @@ import {
   chatData,
   getchats,
   deletechat,
+  getchatswithId,
   // connections,
   // deleteall,
 } from "../controllers/test";
@@ -13,6 +14,7 @@ router.post("/createchat", createChat);
 router.post("/getchat", chatData);
 router.get("/allchats", getchats);
 router.delete("/deletechat", deletechat);
+router.get("/getchatsofuser", getchatswithId);
 // router.get("/connections", connections);
 
 // router.delete("/deleteall", deleteall);

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { getUserChatsWithId } from "../helpers";
 const prisma = new PrismaClient();
 
 // export async function connections(req: Request, res: Response) {
@@ -82,6 +83,16 @@ export async function deletechat(req: Request, res: Response) {
 export async function getchats(req: Request, res: Response) {
   try {
     const chats = await prisma.chat.findMany({});
+    res.status(200).json({ Data: chats });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getchatswithId(req: Request, res: Response) {
+  const { id } = req.body;
+  try {
+    const chats = await getUserChatsWithId(id);
     res.status(200).json({ Data: chats });
   } catch (error) {
     console.log(error);
