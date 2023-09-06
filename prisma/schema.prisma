@@ -21,7 +21,7 @@ model user {
   Email        String    @unique
   PasswordHash String
   status       Status    @default(InActive)
-  connectionId String[]
+  connectionId String?
   lastSeenAt   DateTime  @default(now()) @updatedAt()
   chats        chat[]
   messages     message[]

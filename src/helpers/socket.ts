@@ -13,16 +13,14 @@ export async function addConnectionStatus(
     },
     data: {
       status: "Active",
-      connectionId: {
-        push: connectionId,
-      },
+      connectionId: connectionId,
     },
   });
 }
 
 export async function removeConnectionStatus(
   userId: string,
-  connectionId: string
+
 ) {
   try {
     const user = await prisma.user.findUnique({
@@ -31,16 +29,12 @@ export async function removeConnectionStatus(
       },
     });
 
-    const updatedConnectionIds = user.connectionId.filter(
-      (id) => id !== connectionId
-    );
-
     await prisma.user.update({
       where: {
         id: userId,
       },
       data: {
-        connectionId: [],
+        connectionId: "",
         status: "InActive", // Set the status to "InActive"
         lastSeenAt: new Date(GetDateTime()),
       },

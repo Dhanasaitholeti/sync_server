@@ -16,10 +16,16 @@ export async function getUserChatsWithId(id: string) {
       id,
     },
     include: {
+      messages: true,
       chats: {
         select: {
           id: true,
           members: {
+            where: {
+              NOT: {
+                id: id, // Filter out the member with the connected ID
+              },
+            },
             select: {
               Name: true,
             },
@@ -28,6 +34,7 @@ export async function getUserChatsWithId(id: string) {
       },
     },
   });
+
   return Chats;
 }
 

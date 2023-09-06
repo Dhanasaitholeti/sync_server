@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "message" ADD COLUMN     "sentTime" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "user" ALTER COLUMN "connectionId" DROP NOT NULL,
+ALTER COLUMN "connectionId" SET DATA TYPE TEXT;
