@@ -16,10 +16,10 @@ export async function getUserChatsWithId(id: string) {
       id,
     },
     include: {
-      messages: true,
       chats: {
         select: {
           id: true,
+          messages: true,
           members: {
             where: {
               NOT: {
@@ -36,6 +36,19 @@ export async function getUserChatsWithId(id: string) {
   });
 
   return Chats;
+}
+
+export async function getChatMessagesWithChatId(chatId: string) {
+  const chatMessages = await prisma.chat.findFirst({
+    where: {
+      id: chatId,
+    },
+    include: {
+      messages: true,
+    },
+  });
+
+  return chatMessages;
 }
 
 export function GetDateTime() {
