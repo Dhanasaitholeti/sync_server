@@ -18,6 +18,7 @@ declare module "socket.io" {
 const socketAuth = async (socket: Socket, next: () => void) => {
   try {
     const token = socket.handshake.auth.token;
+    if (!token) throw new Error("No Token propvided");
     const authResult = jwt.verify(token, process.env.JWT_KEY) as JwtPayload;
     socket.userData = await getUserDataWithEmail(authResult.Email);
     next();

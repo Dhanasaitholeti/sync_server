@@ -4,6 +4,7 @@ import { getUserChatsWithId, createMessage } from "../helpers";
 const prisma = new PrismaClient();
 
 export async function createChat(req: Request, res: Response) {
+  //Imp
   const { sender, UserId } = req.body;
   try {
     const newChat = await prisma.chat.create({
@@ -57,6 +58,7 @@ export async function chatData(req: Request, res: Response) {
 }
 
 export async function deletechat(req: Request, res: Response) {
+  //Imp
   const { id } = req.body;
   try {
     await prisma.chat.delete({

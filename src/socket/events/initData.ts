@@ -1,4 +1,4 @@
-import { getUserChatsWithId, getUserDataWithEmail } from "../../helpers";
+import { getUserChatsWithId } from "../../helpers";
 import { Server, Socket } from "socket.io";
 
 const initData = async (io: Server, socket: Socket) => {

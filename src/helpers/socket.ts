@@ -1,5 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { GetDateTime, createMessage } from "../helpers";
+import {
+  GetDateTime,
+  createMessage,
+  getChatPartner,
+  getUserDataWithEmail,
+} from "../helpers";
 import { Server, Socket } from "socket.io";
 const prisma = new PrismaClient();
 
@@ -41,12 +46,26 @@ export async function removeConnectionStatus(userId: string) {
   }
 }
 
-export async function sendDatatoConncetion(io: Server, Data: any) {
-  console.log(Data);
+export async function sendDatatoConncetion(
+  io: Server,
+  socket: Socket,
+  Data: any
+) {
   const { chatId, senderId, content } = Data;
-  console.log(content);
   try {
     const newmsg = await createMessage(chatId, senderId, content);
+    const mainuser = await getUserDataWithEmail(
+      socket.userData.Email.toString()
+    );
+    io.to(mainuser.connectionId).emit("receive_messages", newmsg);
+
+    const ChatpartnerData = await getChatPartner(chatId, senderId);
+    if (ChatpartnerData.members[0].status === "Active") {
+      io.to(ChatpartnerData.members[0].connectionId).emit(
+        "receive_messages",
+        newmsg
+      );
+    }
   } catch (err) {
     console.log(err);
   }

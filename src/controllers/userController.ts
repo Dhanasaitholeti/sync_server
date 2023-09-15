@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { getUserDataWithEmail } from "../helpers/index";
 const prisma = new PrismaClient();
 
-async function getUsers(req: Request, res: Response) {
+export async function getUsers(req: Request, res: Response) {
   try {
     const users = await prisma.user.findMany({
       select: {
@@ -29,7 +29,7 @@ async function getUsers(req: Request, res: Response) {
   }
 }
 
-async function Signup(req: Request, res: Response) {
+export async function Signup(req: Request, res: Response) {
   const { Email, Name, Password } = req.body;
   try {
     const EmailUsersData = await getUserDataWithEmail(Email);
@@ -55,7 +55,7 @@ async function Signup(req: Request, res: Response) {
   }
 }
 
-async function Login(req: Request, res: Response) {
+export async function Login(req: Request, res: Response) {
   const { Email, Password } = req.body;
   try {
     const EmailUsersData = await getUserDataWithEmail(Email);
@@ -83,5 +83,3 @@ async function Login(req: Request, res: Response) {
     res.status(400).json({ message: "unable to login" });
   }
 }
-
-export { getUsers, Login, Signup };

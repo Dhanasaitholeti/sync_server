@@ -38,6 +38,30 @@ export async function getUserChatsWithId(id: string) {
   return Chats;
 }
 
+export async function getChatPartner(ChatId: string, senderId: string) {
+  const chatpartnerdata = await prisma.chat.findUnique({
+    where: {
+      id: ChatId,
+    },
+    include: {
+      members: {
+        where: {
+          NOT: {
+            id: senderId,
+          },
+        },
+        select: {
+          id: true,
+          status: true,
+          connectionId: true,
+        },
+      },
+    },
+  });
+
+  return chatpartnerdata;
+}
+
 export async function createMessage(
   chatId: string,
   senderId: string,
