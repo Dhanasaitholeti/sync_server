@@ -16,7 +16,6 @@ declare module "socket.io" {
 }
 
 const socketAuth = async (socket: Socket, next: () => void) => {
-  console.log("It comes to auth middleware");
   try {
     const token = socket.handshake.auth.token;
     const authResult = jwt.verify(token, process.env.JWT_KEY) as JwtPayload;

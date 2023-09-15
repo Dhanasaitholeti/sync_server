@@ -1,17 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { getUserChatsWithId } from "../helpers";
+import { getUserChatsWithId, createMessage } from "../helpers";
 const prisma = new PrismaClient();
-
-// export async function connections(req: Request, res: Response) {
-//   try {
-//     const connectionData = await prisma.activeconnection.findMany({});
-//     res.status(200).json({ Data: connectionData });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(400).json({ message: "unable to get connections" });
-//   }
-// }
 
 export async function createChat(req: Request, res: Response) {
   const { sender, UserId } = req.body;
@@ -96,5 +86,20 @@ export async function getchatswithId(req: Request, res: Response) {
     res.status(200).json({ Data: chats });
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function createMsg(req: Request, res: Response) {
+  console.log(req.body);
+  const { chatId, senderId, content } = req.body;
+
+  try {
+    const newmsg = createMessage(chatId, senderId, content);
+    res
+      .status(201)
+      .json({ message: "New message is created in the chat with the chat id" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: "Error creating message", error });
   }
 }

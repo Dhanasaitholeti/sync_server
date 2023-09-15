@@ -38,17 +38,19 @@ export async function getUserChatsWithId(id: string) {
   return Chats;
 }
 
-export async function getChatMessagesWithChatId(chatId: string) {
-  const chatMessages = await prisma.chat.findFirst({
-    where: {
-      id: chatId,
-    },
-    include: {
-      messages: true,
+export async function createMessage(
+  chatId: string,
+  senderId: string,
+  content: string
+) {
+  const newmsg = await prisma.message.create({
+    data: {
+      content,
+      senderId,
+      chatId,
     },
   });
-
-  return chatMessages;
+  return newmsg;
 }
 
 export function GetDateTime() {

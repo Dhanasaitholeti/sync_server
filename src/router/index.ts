@@ -1,7 +1,7 @@
 import * as express from "express";
 import userRoutes from "../router/userRoutes";
 import testRoutes from "../router/testroute";
-import { getChatMessagesWithChatId, getUserChatsWithId } from "../helpers";
+import { getUserChatsWithId } from "../helpers";
 // import { getchatswithId } from "controllers/test";
 
 const Mainrouter = (app: express.Application): void => {

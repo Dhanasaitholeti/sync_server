@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { GetDateTime } from "../helpers";
+import { GetDateTime, createMessage } from "../helpers";
 import { Server, Socket } from "socket.io";
 const prisma = new PrismaClient();
 
@@ -18,10 +18,7 @@ export async function addConnectionStatus(
   });
 }
 
-export async function removeConnectionStatus(
-  userId: string,
-
-) {
+export async function removeConnectionStatus(userId: string) {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -45,22 +42,12 @@ export async function removeConnectionStatus(
 }
 
 export async function sendDatatoConncetion(io: Server, Data: any) {
-  const { userId, message } = JSON.parse(Data);
-  const connectionidData = await prisma.user.findFirst({
-    where: {
-      id: userId,
-    },
-    select: {
-      connectionId: true,
-    },
-  });
-  const newmsg = await prisma.message.create({
-    data: {
-      content: message,
-      senderId: userId,
-      chatId: "580f4212-760a-4c79-be5f-40dea46979b1",
-    },
-  });
-
-  io.to(connectionidData.connectionId).emit("message", `Message for you`);
+  console.log(Data);
+  const { chatId, senderId, content } = Data;
+  console.log(content);
+  try {
+    const newmsg = await createMessage(chatId, senderId, content);
+  } catch (err) {
+    console.log(err);
+  }
 }
