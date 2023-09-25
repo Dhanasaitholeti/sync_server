@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function createChat(req: Request, res: Response) {
   //Imp
-  const { sender, UserId } = req.body;
+  const { User1, UserId } = req.body;
   try {
     const newChat = await prisma.chat.create({
       data: {
@@ -16,7 +16,7 @@ export async function createChat(req: Request, res: Response) {
     });
 
     const updateduser = await prisma.user.update({
-      where: { id: sender },
+      where: { id: User1 },
       data: {
         chats: {
           connect: [{ id: newChat.id }],
@@ -25,7 +25,7 @@ export async function createChat(req: Request, res: Response) {
     });
 
     const userChats = await prisma.user.findUnique({
-      where: { id: sender },
+      where: { id: User1 },
       include: {
         chats: true, // Retrieve all fields from the Chat model
       },
