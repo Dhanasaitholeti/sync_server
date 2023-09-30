@@ -58,7 +58,7 @@ export async function getChatPartner(ChatId: string, senderId: string) {
       },
     },
   });
-
+  console.log(chatpartnerdata);
   return chatpartnerdata;
 }
 

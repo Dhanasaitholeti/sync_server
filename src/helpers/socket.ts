@@ -52,6 +52,7 @@ export async function sendDatatoConncetion(
   Data: any
 ) {
   const { chatId, senderId, content } = Data;
+  console.log(Data);
   try {
     const newmsg = await createMessage(chatId, senderId, content);
     const mainuser = await getUserDataWithEmail(

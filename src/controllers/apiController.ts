@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { getUserDataWithEmail } from "../helpers";
 const prisma = new PrismaClient();
 
 export async function getUsers(req: Request, res: Response) {
@@ -22,5 +23,10 @@ export async function getUsers(req: Request, res: Response) {
 }
 
 export async function ProfileFetcher(req: Request, res: Response) {
-  res.status(200).json({ message: "This is from the Profile api" });
+  try {
+    const Data = await getUserDataWithEmail(req.userData.Email.toString());
+    res.status(200).json({ Data });
+  } catch (error) {
+    console.log(error);
+  }
 }
