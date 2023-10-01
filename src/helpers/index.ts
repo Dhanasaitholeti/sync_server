@@ -10,6 +10,18 @@ export async function getUserDataWithEmail(Email: string) {
   return Data;
 }
 
+export async function createChatForTwoUsers(user1Id: string, user2Id: string) {
+  const newChat = await prisma.chat.create({
+    data: {
+      members: {
+        connect: [{ id: user1Id }, { id: user2Id }],
+      },
+    },
+  });
+
+  return newChat;
+}
+
 export async function getUserChatsWithId(id: string) {
   const Chats = await prisma.user.findFirst({
     where: {

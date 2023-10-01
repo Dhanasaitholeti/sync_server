@@ -52,13 +52,8 @@ export async function sendDatatoConncetion(
   Data: any
 ) {
   const { chatId, senderId, content } = Data;
-  console.log(Data);
   try {
     const newmsg = await createMessage(chatId, senderId, content);
-    const mainuser = await getUserDataWithEmail(
-      socket.userData.Email.toString()
-    );
-    io.to(mainuser.connectionId).emit("receive_messages", newmsg);
 
     const ChatpartnerData = await getChatPartner(chatId, senderId);
     if (ChatpartnerData.members[0].status === "Active") {

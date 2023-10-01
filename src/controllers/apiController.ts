@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { getUserDataWithEmail } from "../helpers";
+import { createChatForTwoUsers, getUserDataWithEmail } from "../helpers";
 const prisma = new PrismaClient();
 
 export async function getUsers(req: Request, res: Response) {
@@ -28,5 +28,17 @@ export async function ProfileFetcher(req: Request, res: Response) {
     res.status(200).json({ Data });
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function createChat(req: Request, res: Response) {
+  const { user1Id, user2Id } = req.body;
+
+  try {
+    const createdChat = await createChatForTwoUsers(user1Id, user2Id);
+    res.status(201).json({ Data: createdChat });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "server error unable to create chat" });
   }
 }
