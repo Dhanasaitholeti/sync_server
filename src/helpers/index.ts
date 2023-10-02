@@ -39,6 +39,7 @@ export async function getUserChatsWithId(id: string) {
               },
             },
             select: {
+              id: true,
               Name: true,
             },
           },
