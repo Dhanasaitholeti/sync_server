@@ -49,7 +49,7 @@ export async function removeConnectionStatus(userId: string) {
 export async function sendDatatoConncetion(
   io: Server,
   socket: Socket,
-  Data: any
+  Data: { chatId: string; senderId: string; content: string }
 ) {
   const { chatId, senderId, content } = Data;
   try {

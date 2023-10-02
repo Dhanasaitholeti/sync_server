@@ -36,6 +36,7 @@ export async function createChat(req: Request, res: Response) {
 
   try {
     const createdChat = await createChatForTwoUsers(user1Id, user2Id);
+
     res.status(201).json({ Data: createdChat });
   } catch (error) {
     console.log(error);
