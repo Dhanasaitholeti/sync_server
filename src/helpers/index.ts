@@ -10,6 +10,15 @@ export async function getUserDataWithEmail(Email: string) {
   return Data;
 }
 
+export async function getUserDataWithId(id: string) {
+  const Data = await prisma.user.findFirst({
+    where: {
+      id,
+    },
+  });
+  return Data;
+}
+
 export async function createChatForTwoUsers(user1Id: string, user2Id: string) {
   const newChat = await prisma.chat.create({
     data: {
@@ -19,6 +28,7 @@ export async function createChatForTwoUsers(user1Id: string, user2Id: string) {
     },
   });
 
+  console.log(newChat);
   return newChat;
 }
 
@@ -65,6 +75,7 @@ export async function getChatPartner(ChatId: string, senderId: string) {
         },
         select: {
           id: true,
+          Name: true,
           status: true,
           connectionId: true,
         },

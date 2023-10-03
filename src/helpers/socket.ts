@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import {
   GetDateTime,
+  createChatForTwoUsers,
   createMessage,
   getChatPartner,
-  getUserDataWithEmail,
+  getUserDataWithId,
 } from "../helpers";
 import { Server, Socket } from "socket.io";
 const prisma = new PrismaClient();
@@ -66,3 +67,36 @@ export async function sendDatatoConncetion(
     console.log(err);
   }
 }
+
+export async function createChat(
+  io: Server,
+  socket: Socket,
+  Data: { user1Id: string; user2Id: string }
+) {
+  const { user1Id, user2Id } = Data;
+
+  try {
+    const createdChat = await createChatForTwoUsers(user1Id, user2Id);
+    const sendtouser1 = await getChatPartner(createdChat.id, user1Id);
+    const sendtouser2 = await getChatPartner(createdChat.id, user2Id);
+
+    if (sendtouser1.members[0].status === "Active")
+      io.to(sendtouser1.members[0].connectionId).emit("newchat", {
+        ChatId: createdChat.id,
+        Chatpartner: sendtouser1.members[0].Name,
+        ChatpartnerId: sendtouser1.members[0].id,
+      });
+
+    if (sendtouser2.members[0].status === "Active")
+      io.to(sendtouser2.members[0].connectionId).emit("newchat", {
+        ChatId: createdChat.id,
+        Chatpartner: sendtouser2.members[0].Name,
+        ChatpartnerId: sendtouser2.members[0].id,
+      });
+  } catch (error) {}
+}
+
+// ChatId: '8837919d-e896-4c09-9b86-f7707a7dfc20',
+// Chatpartner: 'Test',
+// ChatpartnerId: '83ff6691-82a1-40ee-855e-9ef17eb1641f'
+// },
