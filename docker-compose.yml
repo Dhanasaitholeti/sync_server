@@ -1,0 +1,12 @@
+version: "dev_v1"
+
+services:
+  server:
+    build:
+      context: .
+    volumes:
+      - ./:/server
+      - /server/node_modules
+    ports:
+      - 8080:8080
+    command: npm run dev
