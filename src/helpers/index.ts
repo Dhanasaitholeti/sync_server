@@ -96,6 +96,7 @@ export async function createMessage(
       content,
       senderId,
       chatId,
+      sentTime: GetDateTime(),
     },
   });
   return newmsg;
