@@ -22,7 +22,7 @@ model user {
   PasswordHash String
   status       Status    @default(InActive)
   connectionId String?
-  lastSeenAt   DateTime  @default(now()) @updatedAt()
+  lastSeenAt   DateTime  @default(now())
   chats        chat[]
   messages     message[]
 }

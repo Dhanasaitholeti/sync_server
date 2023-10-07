@@ -26,12 +26,6 @@ export async function addConnectionStatus(
 
 export async function removeConnectionStatus(userId: string) {
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
-
     await prisma.user.update({
       where: {
         id: userId,
@@ -39,7 +33,7 @@ export async function removeConnectionStatus(userId: string) {
       data: {
         connectionId: "",
         status: "InActive", // Set the status to "InActive"
-        lastSeenAt: new Date(GetDateTime()),
+        lastSeenAt: GetDateTime(),
       },
     });
   } catch (error) {
